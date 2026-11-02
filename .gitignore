@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+build/
+dist/
+
+# User-generated data (machine/camera specific, do not commit)
+calibration/*.json
+calibration/captures/
+tags/
+screenshots/

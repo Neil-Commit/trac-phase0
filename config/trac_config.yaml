@@ -1,0 +1,42 @@
+# TRAC Phase 0 simulator configuration.
+# All values below are PROTOTYPE SETTINGS, not final robot specifications.
+# Relative file paths are resolved against the project root.
+
+camera:
+  index: 0                 # webcam index (0 = first camera)
+  width: 1280              # requested capture resolution; must match the calibration resolution
+  height: 720
+  disable_autofocus: true  # autofocus changes the focal length and invalidates calibration
+
+tag:
+  # Dictionary is fixed to DICT_APRILTAG_36h11 (IDs 0-586).
+  assigned_id: 0           # the ONLY tag ID that can affect navigation
+  size_mm: 100.0           # side length of the OUTER BLACK SQUARE as printed, measured with a ruler
+
+calibration:
+  file: calibration/camera_calibration.json
+  max_rms_error_px: 1.5    # calibration with a larger RMS error is rejected -> UNCALIBRATED
+  # Chessboard used by trac.calibrate
+  chessboard_cols: 9       # INNER corners across
+  chessboard_rows: 6       # INNER corners down
+  square_size_mm: 25.0     # printed square size, measured with a ruler
+  min_captures: 15
+
+pose:
+  min_distance_m: 0.10     # planar distances outside [min, max] are rejected
+  max_distance_m: 6.00
+  max_reprojection_error_px: 3.0
+
+navigation:
+  desired_distance_m: 1.00        # follow until the target is this close
+  min_safe_distance_m: 0.50       # closer than this -> TOO_CLOSE_STOP
+  angle_deadband_deg: 8.0         # |angle| <= deadband counts as centered
+  angle_hysteresis_deg: 3.0       # once centered, stay centered until |angle| > deadband + hysteresis
+  distance_hysteresis_m: 0.10     # once within desired distance, resume following only beyond desired + this
+  smoothing_alpha: 0.4            # exponential smoothing of angle/distance (1.0 = no smoothing)
+  required_valid_frames: 5        # consecutive valid frames before any movement state is shown
+  max_linear_mps: 0.50            # simulated forward speed limit
+  max_angular_rps: 1.00           # simulated turn-rate limit
+  linear_gain: 0.80               # (m/s) per metre of distance beyond desired
+  angular_gain: 1.50              # (rad/s) per radian of angle error
+  max_forward_angle_deg: 60.0     # forward speed scales to 0 at this angle (turn in place beyond it)
